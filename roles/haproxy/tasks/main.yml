@@ -1,0 +1,19 @@
+---
+# This role installs HAProxy and configures it.
+
+- name: Download and install haproxy and socat
+  apt: name={{ item }} state=present
+  with_items:
+  - haproxy
+  - socat
+
+
+#Configure Haproxy
+
+- name: enable HAProxy to be started by the init script.
+  template: src=haproxy.j2 dest=/etc/default/haproxy owner=root group=root mode=0644
+
+
+- name: Configure the haproxy cnf file with hosts
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg owner=root group=root  mode=0644
+  notify: restart haproxy

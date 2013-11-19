@@ -1,0 +1,10 @@
+[webservers]
+websrv1
+websrv2
+
+[dbservers]
+websrv1
+websrv2
+
+[lbservers]
+ansiblelb

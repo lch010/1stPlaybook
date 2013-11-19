@@ -1,0 +1,43 @@
+---
+# This is to configure and set the root password for mysql
+# reference doc: https://help.ubuntu.com/community/ApacheMySQLPHP
+
+
+#----------------------------------------------------------------------
+# 'localhost' needs to be the last item for idempotency, see
+# http://ansible.cc/docs/modules.html#mysql-user
+- name: update mysql root password for all root accounts
+
+#mysql_root_new_password is set in the var file
+
+#1. login_password is the current password(root has a password)
+  
+  #mysql_user: login_user=root login_password=abc1 name=root password={{ mysql_root_new_password }} priv=*.*:ALL state=present  
+#2.root has no password yet
+  mysql_user: name=root password={{ mysql_root_new_password }} priv=*.*:ALL host=localhost state=present  
+#----------------------------------------------------------------------
+
+- name: copy Mysql configuration file
+  action: template src=my_root.cnf.j2 dest=/root/.my.cnf owner=root group=root mode=0600
+
+- name: restart mysql
+  service: name=mysql state=restarted
+
+- name: Start  MySQL service
+  service: name=mysql state=started enabled=true
+
+- name: Create Application Database
+  mysql_db: name={{ dbname }} state=present
+
+- name: Create Application DB User
+  #mysql_user: name={{ dbuser }} password={{ dbpassword }}  host='%' priv=*.*:ALL state=present
+  mysql_user: name={{ dbuser }} password={{ dbpassword }}  host='%' state=present
+
+
+#MYSAL and PHP5
+  #change the bind address to the crrent active IP address, it depends on the request
+  #The change I was trying to make is to comment out the origional line and add new line with the IP of eth0 as the default
+  #${ansible_default_ipv4[0]} is NOT working yet.....still need to investigate.....
+#- name: enable remote access for mysql
+#!!(not working yet)  shell:  sed -i '/^bind-address.*/{s.^.#.;s.$.\nbind-address=            =${ansible_default_ipv4[0]}.;q}' /etc/mysql/my.cnf
+

@@ -1,0 +1,111 @@
+ubuntu@AnsibleLB:~/my_playbook/lamp_stack_ec2$ ansible-playbook -i hosts lamp.yml
+
+PLAY [apply common configuration to all nodes] ********************************
+
+GATHERING FACTS ***************************************************************
+ok: [websrv1]
+ok: [ansiblelb]
+ok: [websrv2]
+
+TASK: [Install ssh] ***********************************************************
+ok: [websrv1]
+ok: [websrv2]
+ok: [ansiblelb]
+
+TASK: [Install ntp] ***********************************************************
+ok: [websrv2]
+ok: [ansiblelb]
+ok: [websrv1]
+
+TASK: [Configure ntp file] ****************************************************
+ok: [websrv1]
+ok: [ansiblelb]
+ok: [websrv2]
+
+TASK: [Start the ntp service] *************************************************
+ok: [websrv1]
+ok: [ansiblelb]
+ok: [websrv2]
+
+PLAY [Install and configure LAMP Stack on web servers] ************************
+
+TASK: [Install LAMP stack] ****************************************************
+changed: [websrv1] => (item=apache2,php5,libapache2-mod-php5,mysql-server,mysql-client,libapache2-mod-auth-mysql,php5-mysql,phpmyadmin,python-mysqldb,haproxy)
+changed: [websrv2] => (item=apache2,php5,libapache2-mod-php5,mysql-server,mysql-client,libapache2-mod-auth-mysql,php5-mysql,phpmyadmin,python-mysqldb,haproxy)
+
+TASK: [set localhost to fqdn for Apache] **************************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [rewrite index.html with server name] ***********************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [create a php file to display phpinfo] **********************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [backup  the origional php5.conf] ***************************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [Re-enabling PHP in User Directories in Ubuntu] *************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [copy PHP MySQL tester to the web server] *******************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [enable phpmyadmin under apache] ****************************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [restart apache] ********************************************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [update mysql root password for all root accounts] **********************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [copy Mysql configuration file] *****************************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [restart mysql] *********************************************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [Start  MySQL service] **************************************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [Create Application Database] *******************************************
+changed: [websrv1]
+changed: [websrv2]
+
+TASK: [Create Application DB User] ********************************************
+changed: [websrv1]
+changed: [websrv2]
+
+PLAY [lbservers] **************************************************************
+
+TASK: [Download and install haproxy and socat] ********************************
+changed: [ansiblelb] => (item=haproxy,socat)
+
+TASK: [enable HAProxy to be started by the init script.] **********************
+changed: [ansiblelb]
+
+TASK: [Configure the haproxy cnf file with hosts] *****************************
+changed: [ansiblelb]
+
+NOTIFIED: [restart haproxy] ***************************************************
+changed: [ansiblelb]
+
+PLAY RECAP ********************************************************************
+ansiblelb                  : ok=9    changed=4    unreachable=0    failed=0
+websrv1                    : ok=20   changed=15   unreachable=0    failed=0
+websrv2                    : ok=20   changed=15   unreachable=0    failed=0
+
+ubuntu@AnsibleLB:~/my_playbook/lamp_stack_ec2$

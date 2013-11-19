@@ -1,0 +1,16 @@
+---
+# The variables file used by the playbooks in the webservers group.
+# These don't have to be explicitly imported by vars_files: they are autopopulated.
+
+mysqlservice: mysql
+mysql_port: 3306
+
+#MySQL webapp db 
+dbname: webapp
+dbuser: webengine
+dbpassword: smartgo
+
+#MySQL root user password
+mysql_root_new_password: abc1
+
+#iface: '{{ ansible_default_ipv4.interface }}'

@@ -1,0 +1,5 @@
+---
+- include: install_lamp_stack.yml
+- include: configure_apache.yml
+- include: configure_mysql.yml
+#- include: ../handlers/handlers.yml

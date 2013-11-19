@@ -1,0 +1,26 @@
+---
+# This playbook deploys LAMP stack  on servers in EC2
+
+- name: apply common configuration to all nodes
+  hosts: all
+  user: ubuntu
+  sudo: yes
+
+  roles:
+    - common
+
+- name: Install and configure LAMP Stack on web servers
+  hosts: webservers
+  #gather_facts: false
+  user: ubuntu
+  sudo: yes
+
+  roles:
+    - websrv
+
+- hosts: lbservers
+  user: ubuntu
+  sudo: yes
+
+  roles:
+  - haproxy

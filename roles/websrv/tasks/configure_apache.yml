@@ -1,0 +1,31 @@
+---
+# These tasks to configure apache and php5 after initial installation
+# reference doc: https://help.ubuntu.com/community/ApacheMySQLPHP
+
+#Apache
+- name: set localhost to fqdn for Apache
+  shell: echo "ServerName localhost" | sudo tee /etc/apache2/conf.d/fqdn || /bin/true
+
+- name: rewrite index.html with server name
+  shell: echo '<b>Hello! It is working on {{ ansible_hostname }}!</b>' > /var/www/index.html 
+
+#PHP
+- name: create a php file to display phpinfo
+  shell: echo '<?php phpinfo(); ?>' > /var/www/phpinfo.php
+
+- name: backup  the origional php5.conf
+  shell: sudo cp -pr  /etc/apache2/mods-available/php5.conf  /etc/apache2/mods-available/php5.conf.org
+
+- name: Re-enabling PHP in User Directories in Ubuntu 
+  template: src=php5.conf.j2 dest=/etc/apache2/mods-available/php5.conf owner=root mode=0644
+
+#php mysql connection tester
+- name: copy PHP MySQL tester to the web server
+  template: src=conn_mysql.php dest=/var/www/conn_mysql.php owner=root mode=0744
+
+# enable phpmyadmin to work with apache
+- name: enable phpmyadmin under apache
+  shell:  grep -q 'Include /etc/phpmyadmin/apache.conf' /etc/apache2/apache2.conf || echo 'Include /etc/phpmyadmin/apache.conf' >> /etc/apache2/apache2.conf
+
+- name: restart apache
+  service: name=apache2 state=restarted

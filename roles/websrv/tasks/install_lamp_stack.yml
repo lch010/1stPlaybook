@@ -1,0 +1,17 @@
+---
+# These tasks install LAMP stack
+# reference doc: https://help.ubuntu.com/community/ApacheMySQLPHP
+
+- name: Install LAMP stack
+  apt: name={{ item }} state=present
+  with_items:
+   - apache2
+   - php5
+   - libapache2-mod-php5
+   - mysql-server
+   - mysql-client
+   - libapache2-mod-auth-mysql
+   - php5-mysql
+   - phpmyadmin
+   - python-mysqldb
+   - haproxy
